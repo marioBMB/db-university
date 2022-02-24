@@ -23,7 +23,7 @@ WHERE `cfu` > 10;
 
 SELECT *
 FROM `students`
-WHERE YEAR(NOW()) - YEAR(`date_of_birth`) > 30;
+WHERE TIMESTAMPDIFF(YEAR, `date_of_birth`, CURDATE()) > 30;
 
 
 /*
@@ -63,7 +63,7 @@ WHERE `level` = 'magistrale';
 7. Da quanti dipartimenti è composta l'università? (12)
 */
 
-SELECT COUNT(*) AS `tot_dipartimenti`
+SELECT COUNT(`id`) AS `tot_dipartimenti`
 FROM `departments`;
 
 
@@ -80,7 +80,7 @@ WHERE `phone` IS NULL;
 9. Contare quanti iscritti ci sono stati ogni anno
 */
 
-SELECT COUNT(*) as `tot_iscritti`, YEAR(`enrolment_date`) as `year`
+SELECT YEAR(`enrolment_date`) as `year`, COUNT(*) as `tot_iscritti`, 
 FROM `students`
 GROUP BY `year`;
 
@@ -88,7 +88,7 @@ GROUP BY `year`;
 10. Contare gli insegnanti che hanno l'ufficio nello stesso edificio
 */
 
-SELECT COUNT(*) as `tot_insegnanti`, `office_address` as `indirizzo_ufficio`
+SELECT `office_address` as `indirizzo_ufficio`, COUNT(*) as `tot_insegnanti`, 
 FROM `teachers`
 GROUP BY `office_address`
 ORDER BY `tot_insegnanti` DESC;
@@ -98,7 +98,7 @@ ORDER BY `tot_insegnanti` DESC;
 11. Calcolare la media dei voti di ogni appello d'esame
 */
 
-SELECT `exam_id`, TRUNCATE(AVG(`vote`), 2) as `media_voti`
+SELECT `exam_id`, ROUND(AVG(`vote`), 2) as `media_voti`
 FROM `exam_student`
 GROUP BY `exam_id`;
 
@@ -107,7 +107,7 @@ GROUP BY `exam_id`;
 12. Calcolare quanti corsi di laurea ci sono per ogni dipartimento
 */
 
-SELECT `department_id`, COUNT(*) as `degrees_for_department`
+SELECT `department_id`, COUNT(*) as `degrees_of_department`
 FROM `degrees`
 GROUP BY `department_id`;
 
